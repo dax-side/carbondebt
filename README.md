@@ -136,14 +136,6 @@ Shared modules are active in runtime paths.
 - Shared messages supply API message text.
 - Shared logger receives HTTP logs from Morgan and app logs from Winston.
 
-## Environment variables
-
-- EMISSIONS_API_KEY
-- GEMINI_API_KEY
-- GEMINI_MODEL
-- PORT
-- CLIENT_ORIGIN
-
 ## Known operational notes
 
 - emissions.dev can block some local IP addresses through Cloudflare. In that case, the API returns a 502 upstream error with details.
