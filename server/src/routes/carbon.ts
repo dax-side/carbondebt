@@ -6,7 +6,8 @@ import { breakdown, equivalentKmDriven, estimateMonthlyKwh } from '../services/c
 import { calcElectricity } from '../services/emissions.js';
 import { getSuggestions } from '../services/gemini.js';
 import { BadRequestError } from '../shared/errors/index.js';
-import { ErrorMessages } from '../shared/messages/index.js';
+import { ErrorMessages, SuccessMessages } from '../shared/messages/index.js';
+import { sendSuccess } from '../shared/responses/index.js';
 import type { CarbonResponse } from '../types/carbon.js';
 
 const carbonRouter = Router();
@@ -56,7 +57,7 @@ carbonRouter.post('/carbon', validateBody(CarbonRequestSchema), async (req, res,
       suggestions,
     };
 
-    res.status(200).json(response);
+    sendSuccess(res, SuccessMessages.CARBON.CALCULATED, response);
   } catch (error) {
     next(error);
   }
