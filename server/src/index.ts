@@ -3,14 +3,14 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 
-import { errorHandler } from './middleware/errorHandler.js';
-import { requestLogger } from './middleware/requestLogger.js';
-import carbonRouter from './routes/carbon.js';
-import healthRouter from './routes/health.js';
-import { NotFoundError } from './shared/errors/index.js';
-import { ErrorMessages, SuccessMessages } from './shared/messages/index.js';
-import { logger } from './shared/logger.js';
-import { sendSuccess } from './shared/responses/index.js';
+import { errorHandler } from './middleware/errorHandler';
+import { requestLogger } from './middleware/requestLogger';
+import carbonRouter from './routes/carbon.route';
+import healthRouter from './routes/health.route';
+import { NotFoundError } from './shared/errors/index';
+import { ErrorMessages, SuccessMessages } from './shared/messages/index';
+import { logger } from './shared/logger';
+import { sendSuccess } from './shared/responses/index';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3001);
