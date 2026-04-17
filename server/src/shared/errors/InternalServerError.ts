@@ -1,4 +1,4 @@
-import { AppError } from './AppError.js';
+import { AppError } from './AppError';
 
 export class InternalServerError extends AppError {
   constructor(message: string = 'Internal server error', details?: unknown) {
