@@ -1,3 +1,5 @@
+import type { ErrorEnvelope } from '../responses/types';
+
 /**
  * Base application error.
  * All custom errors should extend this class.
@@ -24,7 +26,7 @@ export class AppError extends Error {
     this.name = this.constructor.name;
   }
 
-  toJSON(): { success: false; error: string; details?: unknown } {
+  toJSON(): ErrorEnvelope {
     return {
       success: false,
       error: this.message,
