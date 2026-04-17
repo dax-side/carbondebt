@@ -3,6 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { AppError } from '../shared/errors/index.js';
 import { ErrorMessages } from '../shared/messages/index.js';
 import { logger } from '../shared/logger.js';
+import { sendError } from '../shared/responses/index.js';
 
 export function errorHandler(
   err: unknown,
@@ -30,7 +31,10 @@ export function errorHandler(
       logger.warn('Operational request error', logPayload);
     }
 
-    res.status(err.statusCode).json(err.toJSON());
+    sendError(res, err.statusCode, {
+      error: err.message,
+      details: err.details,
+    });
     return;
   }
 
@@ -47,8 +51,7 @@ export function errorHandler(
     });
   }
 
-  res.status(500).json({
-    success: false,
+  sendError(res, 500, {
     error: ErrorMessages.COMMON.INTERNAL_SERVER_ERROR,
   });
 }
