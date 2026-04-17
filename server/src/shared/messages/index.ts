@@ -1,2 +1,2 @@
-export { ErrorMessages } from './ErrorMessages.js';
-export { SuccessMessages, type SuccessResponse } from './SuccessMessages.js';
+export { ErrorMessages } from './ErrorMessages';
+export { SuccessMessages, type SuccessResponse } from './SuccessMessages';
