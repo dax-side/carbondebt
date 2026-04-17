@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { AppError } from '../shared/errors/index.js';
-import { ErrorMessages } from '../shared/messages/index.js';
-import { logger } from '../shared/logger.js';
-import { sendError } from '../shared/responses/index.js';
+import { AppError } from '../shared/errors/index';
+import { ErrorMessages } from '../shared/messages/index';
+import { logger } from '../shared/logger';
+import { sendError } from '../shared/responses/index';
 
 export function errorHandler(
   err: unknown,
