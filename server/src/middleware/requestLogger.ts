@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 
-import { logger } from '../shared/logger.js';
+import { logger } from '../shared/logger';
 
 const stream = {
   write: (message: string): void => {
