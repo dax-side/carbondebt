@@ -55,6 +55,7 @@ Returns service status in the shared success envelope.
 
 Response shape:
 
+```json
 {
   "success": true,
   "message": "Service is healthy",
@@ -64,11 +65,13 @@ Response shape:
     "timestamp": "2026-04-17T00:00:00.000Z"
   }
 }
+```
 
 ### POST /api/carbon
 
 Request body:
 
+```json
 {
   "provider": "aws",
   "region": "us-east-1",
@@ -77,9 +80,11 @@ Request body:
   "storageGB": 250,
   "lambdaInvocations": 1500000
 }
+```
 
 Success response envelope:
 
+```json
 {
   "success": true,
   "message": "Carbon report calculated successfully",
@@ -92,7 +97,11 @@ Success response envelope:
       "savingKg": 96.05
     },
     "breakdown": [
-      { "service": "compute", "co2eKg": 65.387, "pct": 52 }
+      {
+        "service": "compute",
+        "co2eKg": 65.387,
+        "pct": 52
+      }
     ],
     "suggestions": [
       {
@@ -103,9 +112,11 @@ Success response envelope:
     ]
   }
 }
+```
 
 Error response:
 
+```json
 {
   "success": false,
   "error": "Failed to fetch emissions data from emissions.dev.",
@@ -114,6 +125,7 @@ Error response:
     "statusText": "Forbidden"
   }
 }
+```
 
 ## Shared layer in use
 
@@ -123,3 +135,17 @@ Shared modules are active in runtime paths.
 - Shared success helper formats health and carbon responses.
 - Shared messages supply API message text.
 - Shared logger receives HTTP logs from Morgan and app logs from Winston.
+
+## Environment variables
+
+- EMISSIONS_API_KEY
+- GEMINI_API_KEY
+- GEMINI_MODEL
+- PORT
+- CLIENT_ORIGIN
+
+## Known operational notes
+
+- emissions.dev can block some local IP addresses through Cloudflare. In that case, the API returns a 502 upstream error with details.
+- Gemini model availability changes with quota and traffic. The selected model is read from GEMINI_MODEL.
+- Carbon endpoint responses are wrapped in the shared envelope. Frontend code unwraps the data payload.
