@@ -1,4 +1,4 @@
-export * from './errors/index.js';
-export * from './messages/index.js';
-export * from './responses/index.js';
-export { logger } from './logger.js';
+export * from './errors/index';
+export * from './messages/index';
+export * from './responses/index';
+export { logger } from './logger';
