@@ -1,4 +1,4 @@
-import { AppError } from './AppError.js';
+import { AppError } from './AppError';
 
 export class NotFoundError extends AppError {
   constructor(message: string = 'Resource not found', details?: unknown) {
