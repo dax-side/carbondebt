@@ -8,8 +8,9 @@ import { requestLogger } from './middleware/requestLogger.js';
 import carbonRouter from './routes/carbon.js';
 import healthRouter from './routes/health.js';
 import { NotFoundError } from './shared/errors/index.js';
-import { ErrorMessages } from './shared/messages/index.js';
+import { ErrorMessages, SuccessMessages } from './shared/messages/index.js';
 import { logger } from './shared/logger.js';
+import { sendSuccess } from './shared/responses/index.js';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3001);
@@ -27,7 +28,7 @@ app.use('/api', healthRouter);
 app.use('/api', carbonRouter);
 
 app.get('/', (_req, res) => {
-  res.status(200).json({
+  sendSuccess(res, SuccessMessages.GENERIC.RETRIEVED, {
     name: 'carbondebt api',
     status: 'ready',
   });
