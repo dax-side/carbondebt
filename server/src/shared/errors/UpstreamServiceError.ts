@@ -1,4 +1,4 @@
-import { AppError } from './AppError.js';
+import { AppError } from './AppError';
 
 export class UpstreamServiceError extends AppError {
   constructor(message: string = 'Upstream service error', details?: unknown) {
