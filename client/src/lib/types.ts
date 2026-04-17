@@ -9,6 +9,12 @@ export interface CarbonRequest {
   lambdaInvocations?: number;
 }
 
+export interface ApiSuccessEnvelope<T> {
+  success: true;
+  message: string;
+  data: T;
+}
+
 export interface CarbonResponse {
   totalCo2eKg: number;
   gridIntensity: number;
