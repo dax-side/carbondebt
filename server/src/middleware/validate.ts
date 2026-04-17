@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 
-import { ValidationError } from '../shared/errors/index.js';
-import { ErrorMessages } from '../shared/messages/index.js';
+import { ValidationError } from '../shared/errors/index';
+import { ErrorMessages } from '../shared/messages/index';
 
 export const CarbonRequestSchema = z.object({
   provider: z.enum(['aws', 'gcp', 'azure']),
