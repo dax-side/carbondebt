@@ -1,9 +1,5 @@
 import type { Response } from 'express';
-
-interface ResponseMessage {
-  statusCode: number;
-  message: string;
-}
+import type { ResponseMessage, SuccessEnvelope } from './types';
 
 /**
  * Send a standardized success response.
@@ -13,9 +9,11 @@ export const sendSuccess = (
   responseMessage: ResponseMessage,
   data?: unknown
 ): void => {
-  res.status(responseMessage.statusCode).json({
+  const payload: SuccessEnvelope = {
     success: true,
     message: responseMessage.message,
     data,
-  });
+  };
+
+  res.status(responseMessage.statusCode).json(payload);
 };
