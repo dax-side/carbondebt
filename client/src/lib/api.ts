@@ -1,5 +1,11 @@
 import type { CarbonRequest, CarbonResponse } from './types';
 
+interface ApiSuccessEnvelope<T> {
+  success: true;
+  message: string;
+  data: T;
+}
+
 const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '') ?? '';
 
 function getCarbonUrl(): string {
@@ -33,5 +39,11 @@ export async function calcCarbon(req: CarbonRequest): Promise<CarbonResponse> {
     throw new Error(detail);
   }
 
-  return (await response.json()) as CarbonResponse;
+  const payload = (await response.json()) as CarbonResponse | ApiSuccessEnvelope<CarbonResponse>;
+
+  if ('success' in payload && payload.success) {
+    return payload.data;
+  }
+
+  return payload as CarbonResponse;
 }
