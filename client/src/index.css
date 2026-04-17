@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #050609;
+  background-image:
+    radial-gradient(130% 120% at 10% 0%, rgba(132, 209, 47, 0.17), transparent 65%),
+    radial-gradient(120% 120% at 90% 20%, rgba(84, 108, 151, 0.2), transparent 72%),
+    linear-gradient(180deg, #050609 0%, #0a0d12 100%);
+  color: #ffffff;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-2xl border border-white/10 bg-panel/75 shadow-panel backdrop-blur;
+  }
+
+  .metric-card {
+    @apply rounded-2xl border border-white/10 bg-panel/70 p-4 shadow-panel;
+  }
+
+  .field-block {
+    @apply flex flex-col gap-2;
+  }
+
+  .field-label {
+    @apply text-sm text-mist;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border border-white/15 bg-panelAlt/70 px-3 py-2.5 text-base text-white outline-none transition focus:border-lime/70;
+  }
+}
