@@ -1,10 +1,4 @@
-import type { CarbonRequest, CarbonResponse } from './types';
-
-interface ApiSuccessEnvelope<T> {
-  success: true;
-  message: string;
-  data: T;
-}
+import type { ApiSuccessEnvelope, CarbonRequest, CarbonResponse } from './types';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '') ?? '';
 
