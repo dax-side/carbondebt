@@ -1,4 +1,4 @@
-import type { Provider } from '../types/carbon.js';
+import type { Provider } from '../types/carbon';
 
 export interface RegionConfig {
   name: string;
