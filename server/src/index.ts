@@ -1,0 +1,44 @@
+import 'dotenv/config';
+
+import cors from 'cors';
+import express from 'express';
+
+import { errorHandler } from './middleware/errorHandler.js';
+import { requestLogger } from './middleware/requestLogger.js';
+import carbonRouter from './routes/carbon.js';
+import healthRouter from './routes/health.js';
+import { NotFoundError } from './shared/errors/index.js';
+import { ErrorMessages } from './shared/messages/index.js';
+import { logger } from './shared/logger.js';
+
+const app = express();
+const port = Number(process.env.PORT ?? 3001);
+const clientOrigin = process.env.CLIENT_ORIGIN;
+
+app.use(
+  cors({
+    origin: clientOrigin === '*' ? true : clientOrigin,
+  })
+);
+app.use(express.json());
+app.use(requestLogger);
+
+app.use('/api', healthRouter);
+app.use('/api', carbonRouter);
+
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    name: 'carbondebt api',
+    status: 'ready',
+  });
+});
+
+app.use((_req, _res, next) => {
+  next(new NotFoundError(ErrorMessages.COMMON.NOT_FOUND));
+});
+
+app.use(errorHandler);
+
+app.listen(port, () => {
+  logger.info(`carbondebt server listening on ${port}`);
+});
