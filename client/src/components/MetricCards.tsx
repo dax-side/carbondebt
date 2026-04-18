@@ -16,26 +16,22 @@ export default function MetricCards({ report }: MetricCardsProps) {
     {
       label: 'Total CO2e',
       value: report ? formatValue(report.totalCo2eKg, 1) : '--',
-      unit: 'kg / month',
-      className: 'text-amber-400',
+      unit: 'kg per month',
     },
     {
       label: 'Grid intensity',
       value: report ? formatValue(report.gridIntensity, 0) : '--',
       unit: 'gCO2e / kWh',
-      className: 'text-white',
     },
     {
-      label: 'Potential saving',
+      label: 'Best region saving',
       value: report ? formatValue(report.bestRegion.savingKg, 1) : '--',
       unit: report ? `kg if you switch to ${report.bestRegion.name}` : 'kg / month',
-      className: 'text-lime',
     },
     {
       label: 'Equivalent to',
       value: report ? formatValue(report.equivalentKmDriven, 0) : '--',
       unit: 'km driven by car',
-      className: 'text-white',
     },
   ];
 
@@ -43,9 +39,9 @@ export default function MetricCards({ report }: MetricCardsProps) {
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
         <article key={card.label} className="metric-card">
-          <p className="text-sm text-mist/90">{card.label}</p>
-          <p className={`mt-2 font-display text-4xl leading-none ${card.className}`}>{card.value}</p>
-          <p className="mt-2 text-sm text-mist">{card.unit}</p>
+          <p className="section-label">{card.label}</p>
+          <p className="mt-3 text-[22px] font-medium leading-tight text-[#e6e8e6]">{card.value}</p>
+          <p className="mt-3 text-sm text-[#8f968f]">{card.unit}</p>
         </article>
       ))}
     </div>
