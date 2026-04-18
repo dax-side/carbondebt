@@ -1,71 +1,44 @@
 # carbondebt
 
 carbondebt is a cloud emissions dashboard for developers.
-It takes backend workload inputs, fetches carbon data, and returns action-focused suggestions.
+Enter your workload numbers, then get a monthly footprint estimate and a ranked action list.
 
-This README is the full project reference. The separate docs folder is not used.
+Live demo: [carbondebt-client.vercel.app](https://carbondebt-client.vercel.app)
 
-## Why this project exists
+## What you get
 
-Infrastructure has a carbon cost that rarely shows up in day to day development.
-carbondebt makes that cost visible with one API call and one dashboard view.
-
-## What the app shows
-
-- Total monthly CO2e for the submitted workload
+- Total monthly CO2e
 - Grid intensity for the selected region
-- Emissions split by service category
-- Best lower-carbon region inside the selected cloud provider
-- Gemini suggestions ranked by estimated monthly savings
+- Emissions split by service (compute, database, storage, network, lambda)
+- Best lower-carbon region inside the same cloud provider
+- Gemini suggestions sorted by estimated monthly savings
 
-## Data policy
+## How carbon is calculated
 
-- No fake emissions fallback. If emissions.dev is unavailable, the API returns an upstream error.
-- No fake Gemini suggestions. If Gemini fails, suggestions return as an empty list.
-- No simulated history bars. Trend is shown as current month only until real snapshots are stored.
+The backend uses scope 2 location-based emissions from local region intensity data.
+Intensity values come from Ember Global Electricity Review 2025.
+
+Formula:
+
+```text
+CO2e (kg) = kWh * grid_intensity (gCO2e/kWh) / 1000
+```
+
+Source file for region values: `server/src/data/regions.ts`
 
 ## Stack
 
 - Frontend: React, Vite, TypeScript, Tailwind CSS
 - Backend: Node.js, Express, TypeScript
-- Carbon source: emissions.dev
-- AI source: Google Gemini
-- Logging: Morgan piped into Winston
-
-## Monorepo layout
-
-- client: Dashboard frontend
-- server: API, validation, service integrations
-- server/src/shared: shared errors, messages, response helpers, logger
-
-## Request flow
-
-1. Client sends a typed POST request to /api/carbon.
-2. Server validates payload with Zod middleware.
-3. Server requests emissions from emissions.dev.
-4. Server computes service breakdown and best-region savings.
-5. Server requests ranked suggestions from Gemini.
-6. Server returns one response envelope consumed by the dashboard.
+- Validation: Zod
+- AI: Google Gemini
+- Logging: Morgan + Winston
 
 ## API
 
 ### GET /api/health
 
-Returns service status in the shared success envelope.
-
-Response shape:
-
-```json
-{
-  "success": true,
-  "message": "Service is healthy",
-  "data": {
-    "status": "ok",
-    "uptime": 123,
-    "timestamp": "2026-04-17T00:00:00.000Z"
-  }
-}
-```
+Returns service status.
 
 ### POST /api/carbon
 
@@ -82,62 +55,22 @@ Request body:
 }
 ```
 
-Success response envelope:
+Success response includes:
 
-```json
-{
-  "success": true,
-  "message": "Carbon report calculated successfully",
-  "data": {
-    "totalCo2eKg": 125.75,
-    "gridIntensity": 415,
-    "equivalentKmDriven": 579,
-    "bestRegion": {
-      "name": "eu-north-1 (Stockholm)",
-      "savingKg": 96.05
-    },
-    "breakdown": [
-      {
-        "service": "compute",
-        "co2eKg": 65.387,
-        "pct": 52
-      }
-    ],
-    "suggestions": [
-      {
-        "title": "Migrate workloads to Stockholm",
-        "description": "...",
-        "savingKg": 96
-      }
-    ]
-  }
-}
-```
+- `totalCo2eKg`
+- `gridIntensity`
+- `equivalentKmDriven`
+- `bestRegion`
+- `breakdown`
+- `suggestions`
 
-Error response:
+Validation errors return HTTP `422` with details.
 
-```json
-{
-  "success": false,
-  "error": "Failed to fetch emissions data from emissions.dev.",
-  "details": {
-    "status": 403,
-    "statusText": "Forbidden"
-  }
-}
-```
+## Limits
 
-## Shared layer in use
+- Scope 2 only
+- Region list is curated in code
+- Monthly trend is estimated for demo display
+- Gemini suggestions can be empty when the model is unavailable
 
-Shared modules are active in runtime paths.
-
-- Shared errors are thrown from validation and upstream services.
-- Shared success helper formats health and carbon responses.
-- Shared messages supply API message text.
-- Shared logger receives HTTP logs from Morgan and app logs from Winston.
-
-## Known operational notes
-
-- emissions.dev can block some local IP addresses through Cloudflare. In that case, the API returns a 502 upstream error with details.
-- Gemini model availability changes with quota and traffic. The selected model is read from GEMINI_MODEL.
-- Carbon endpoint responses are wrapped in the shared envelope. Frontend code unwraps the data payload.
+Built for the [DEV Weekend Challenge: Earth Day Edition](https://dev.to/challenges/weekend-2026-04-16) (April 2026).
