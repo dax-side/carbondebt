@@ -48,12 +48,13 @@ export async function calcElectricity(regionCode: string, kwhMonthly: number): P
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
+    const upstreamStatusCode = response.status >= 400 && response.status < 600 ? response.status : 502;
 
     throw new UpstreamServiceError(ErrorMessages.CARBON.EMISSIONS_API_FAILED, {
       status: response.status,
       statusText: response.statusText,
       body: body.slice(0, 300),
-    });
+    }, upstreamStatusCode);
   }
 
   const payload = (await response.json()) as Record<string, unknown>;
