@@ -16,9 +16,45 @@ const app = express();
 const port = Number(process.env.PORT ?? 3001);
 const clientOrigin = process.env.CLIENT_ORIGIN;
 
+function normalizeOrigin(origin: string): string {
+  return origin.replace(/\/+$/, '');
+}
+
+function getAllowedOrigins(rawOrigins?: string): string[] {
+  if (!rawOrigins) {
+    return [];
+  }
+
+  return rawOrigins
+    .split(',')
+    .map((origin) => normalizeOrigin(origin.trim()))
+    .filter(Boolean);
+}
+
+const allowedOrigins = getAllowedOrigins(clientOrigin);
+
 app.use(
   cors({
-    origin: clientOrigin === '*' ? true : clientOrigin,
+    origin: (requestOrigin, callback) => {
+      if (clientOrigin === '*') {
+        callback(null, true);
+        return;
+      }
+
+      if (!requestOrigin) {
+        callback(null, true);
+        return;
+      }
+
+      const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
+
+      if (allowedOrigins.includes(normalizedRequestOrigin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
   })
 );
 app.use(express.json());
