@@ -9,13 +9,10 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #050609;
-  background-image:
-    radial-gradient(130% 120% at 10% 0%, rgba(132, 209, 47, 0.17), transparent 65%),
-    radial-gradient(120% 120% at 90% 20%, rgba(84, 108, 151, 0.2), transparent 72%),
-    linear-gradient(180deg, #050609 0%, #0a0d12 100%);
-  color: #ffffff;
-  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: #0f1010;
+  color: #e6e8e6;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-weight: 400;
 }
 
 * {
@@ -23,12 +20,12 @@ body {
 }
 
 @layer components {
-  .glass-panel {
-    @apply rounded-2xl border border-white/10 bg-panel/75 shadow-panel backdrop-blur;
+  .app-panel {
+    @apply rounded-[12px] border border-[#252825] bg-[#161918];
   }
 
   .metric-card {
-    @apply rounded-2xl border border-white/10 bg-panel/70 p-4 shadow-panel;
+    @apply rounded-[8px] border border-[#252825] bg-[#161918] p-4;
   }
 
   .field-block {
@@ -36,10 +33,26 @@ body {
   }
 
   .field-label {
-    @apply text-sm text-mist;
+    @apply text-[11px] font-medium uppercase tracking-[0.05em] text-[#8f968f];
   }
 
   .field-input {
-    @apply w-full rounded-xl border border-white/15 bg-panelAlt/70 px-3 py-2.5 text-base text-white outline-none transition focus:border-lime/70;
+    @apply w-full rounded-[8px] border border-[#2a2e2a] bg-[#121413] px-3 py-2.5 text-base text-[#e6e8e6] outline-none transition-colors;
+  }
+
+  .field-input:hover {
+    border-color: #353a35;
+  }
+
+  .field-input:focus {
+    border-color: #6b8f5e;
+  }
+
+  .section-label {
+    @apply text-[11px] font-medium uppercase tracking-[0.05em] text-[#8f968f];
+  }
+
+  .subtle-text {
+    @apply text-sm text-[#8f968f];
   }
 }

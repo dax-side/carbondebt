@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import EmissionsChart from './components/EmissionsChart';
 import InputForm from './components/InputForm';
@@ -23,43 +23,44 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const runCalculation = async () => {
+  const runCalculation = useCallback(async (payload: CarbonRequest) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await calcCarbon(request);
+      const response = await calcCarbon(payload);
       setReport(response);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong while calculating carbon data.');
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const handleManualSubmit = () => {
+    void runCalculation(request);
   };
 
   useEffect(() => {
-    void runCalculation();
-  }, []);
+    void runCalculation(request);
+  }, [request.provider, request.region, runCalculation]);
 
   return (
-    <div className="relative min-h-screen px-4 pb-8 pt-6 text-white sm:px-6 lg:px-10">
+    <div className="min-h-screen px-4 pb-8 pt-6 text-[#e6e8e6] sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl space-y-5">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="font-display text-4xl tracking-tight sm:text-5xl">Carbon debt tracker</h1>
-            <p className="mt-2 text-mist">
-              Measure cloud emissions in seconds and get ranked optimisation moves powered by Gemini.
-            </p>
+            <h1 className="text-5xl font-medium tracking-tight sm:text-6xl">
+              <span className="text-[#eef0ee]">carbon</span>
+              <span className="text-[#6b8f5e]">debt</span>
+            </h1>
+            <p className="mt-2 subtle-text">Measure cloud emissions. Get ranked fixes.</p>
           </div>
-          <span className="rounded-full border border-lime/40 bg-lime/15 px-4 py-1 text-sm text-lime">
-            Earth Day build
+          <span className="rounded-full border border-[#252825] bg-[#121413] px-4 py-1 text-sm text-[#8f968f]">
+            Earth Day 2026
           </span>
         </header>
 
-        <InputForm value={request} onChange={setRequest} onSubmit={runCalculation} loading={loading} />
-
-        {error ? (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
-        ) : null}
+        <InputForm value={request} onChange={setRequest} onSubmit={handleManualSubmit} loading={loading} error={error} />
 
         <MetricCards report={report} />
 
