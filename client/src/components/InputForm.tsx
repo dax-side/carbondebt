@@ -4,6 +4,7 @@ import type { CarbonRequest, Provider } from '../lib/types';
 interface InputFormProps {
   value: CarbonRequest;
   loading: boolean;
+  error: string | null;
   onChange: (next: CarbonRequest) => void;
   onSubmit: () => void;
 }
@@ -22,7 +23,7 @@ function parseOptionalNumber(value: string): number | undefined {
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-export default function InputForm({ value, loading, onChange, onSubmit }: InputFormProps) {
+export default function InputForm({ value, loading, error, onChange, onSubmit }: InputFormProps) {
   const providerRegions = getRegionsByProvider(value.provider);
 
   const updateField = <K extends keyof CarbonRequest>(field: K, fieldValue: CarbonRequest[K]) => {
@@ -48,7 +49,7 @@ export default function InputForm({ value, loading, onChange, onSubmit }: InputF
         event.preventDefault();
         onSubmit();
       }}
-      className="glass-panel p-4 md:p-5"
+      className="app-panel p-4 md:p-5"
     >
       <div className="grid gap-3 md:grid-cols-3">
         <label className="field-block">
@@ -75,14 +76,14 @@ export default function InputForm({ value, loading, onChange, onSubmit }: InputF
           >
             {providerRegions.map((region) => (
               <option key={region.code} value={region.code}>
-                {region.code} ({region.name})
+                {region.code} - {region.name}
               </option>
             ))}
           </select>
         </label>
 
         <label className="field-block">
-          <span className="field-label">Monthly compute hours</span>
+          <span className="field-label">Compute hours / month</span>
           <input
             className="field-input"
             type="number"
@@ -117,7 +118,7 @@ export default function InputForm({ value, loading, onChange, onSubmit }: InputF
         </label>
 
         <label className="field-block">
-          <span className="field-label">Lambda invocations/month (optional)</span>
+          <span className="field-label">Lambda invocations / mo</span>
           <input
             className="field-input"
             type="number"
@@ -131,10 +132,12 @@ export default function InputForm({ value, loading, onChange, onSubmit }: InputF
       <button
         type="submit"
         disabled={loading}
-        className="mt-4 w-full rounded-xl border border-lime/35 bg-black/60 py-3 font-display text-lg text-lime transition hover:border-lime/60 hover:bg-black/75 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-4 w-full rounded-[8px] border border-[#3f5f34] bg-[#3f5f34] py-3 text-base font-medium text-[#0f1010] transition-colors hover:border-[#4a6b3e] hover:bg-[#4a6b3e] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Calculating...' : 'Connect to emissions.dev API'}
+        {loading ? 'Calculating...' : 'Calculate carbon footprint'}
       </button>
+
+      {error ? <p className="mt-2 text-xs text-[#b69a9a]">{error}</p> : null}
     </form>
   );
 }
